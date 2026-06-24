@@ -1,6 +1,6 @@
 ---
 title: "Extract all Odoo contacts"
-state: draft
+state: completed
 ---
 
 # Run 01
@@ -19,7 +19,7 @@ Read the `AGENTS.md` and `README.md` to get an understanding of the project.
 
 ## Task
 
-Create a Jupyter notebook `extract.ipynb`. This notebook connects with json-rpc to Odoo and exports all contacts.
+Create a Jupyter notebook `extract.ipynb`. This notebook connects with the new JSON-2 API via `/json/2` endpint to Odoo and exports all contacts.
 
 Use these credentials to connect to the database:
 
@@ -39,10 +39,18 @@ For the export read the `res.partner` table. I want you to read/store these attr
 - `name`
 - `email`
 - `type`
-- `parent_id/name`
+- `parent_id`
+
+You can run the notebook with `task run extract.ipynb`.
 
 ## Worklog
 
-@Clanker Add a summary here once the task has been completed.
+Created `extract.ipynb` that connects to Odoo 18 via `/json/2` JSON-RPC API using Bearer token auth (password used as API key). The notebook:
+- Uses `urllib` with SSL verification bypass (expired cert on server)
+- Calls `res.partner/search` to get all 38 contact IDs
+- Calls `res.partner/get_external_id` to retrieve XML IDs (none found, fallback to DB ID)
+- Calls `res.partner/read` in batches of 200 to get fields
+- Exports to `input/res.partner.csv`
+- Cleans `parent_id` from display-name tuples to raw IDs
 
-@Clanker Set frontmatter state to completed.
+Ran successfully with `./task run extract.ipynb`.

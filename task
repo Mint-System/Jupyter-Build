@@ -156,7 +156,7 @@ run-container() {
     docker pull "$image_tag"
     docker rm -f "$container_name"
 
-    JUPYTER_TOKEN="etooSheese5eedae1mid"
+    JUPYTER_TOKEN=""
     echo "Open http://localhost:8888/lab?token=$JUPYTER_TOKEN in your browser"
     docker run -p 8888:80 -d \
         --name "$container_name" \

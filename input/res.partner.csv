@@ -1,0 +1,39 @@
+id,company_type,name,email,type,parent_id
+9,company,Acme Corporation,acme_corp@yourcompany.example.com,contact,False
+36,person,Addison Olson,addison.olson28@example.com,contact,9
+19,person,Douglas Fletcher,douglas.fletcher51@example.com,contact,9
+20,person,Floyd Steward,floyd.steward34@example.com,contact,9
+15,company,Azure Interior,azure.Interior24@example.com,contact,False
+27,person,Brandon Freeman,brandon.freeman55@example.com,contact,15
+34,person,Colleen Diaz,colleen.diaz83@example.com,contact,15
+28,person,Nicole Ford,nicole.ford75@example.com,contact,15
+10,company,Gemini Furniture,gemini_furniture@fake.geminifurniture.com,contact,False
+21,person,Edwin Hansen,edwin.hansen58@example.com,contact,10
+23,person,Jesse Brown,jesse.brown74@example.com,contact,10
+32,person,Oscar Morgan,oscar.morgan11@example.com,contact,10
+24,person,Soham Palmer,soham.palmer15@example.com,contact,10
+13,company,LightsUp,lightsup@example.com,contact,False
+16,company,Lumber Inc,lumber-inv92@example.com,contact,False
+35,person,Lorraine Douglas,lorraine.douglas35@example.com,contact,16
+12,company,OpenWood,wow@example.com,contact,False
+11,company,Ready Mat,ready.mat28@example.com,contact,False
+22,person,Billy Fox,billy.fox45@example.com,contact,11
+26,person,Edith Sanchez,edith.sanchez68@example.com,contact,11
+38,person,Julie Richards,julie.richards84@example.com,contact,11
+25,person,Kim Snyder,kim.snyder96@example.com,contact,11
+37,person,Sandra Neal,sandra.neal80@example.com,contact,11
+31,person,Theodore Gardner,theodore.gardner36@example.com,contact,11
+39,person,Travis Mendoza,travis.mendoza24@example.com,contact,11
+14,company,The Jackson Group,jackson.group82@example.com,contact,False
+30,person,Gordon Owens,gordon.owens47@example.com,contact,14
+29,person,Toni Rhodes,toni.rhodes11@example.com,contact,14
+8,company,Wood Corner,wood.corner26@example.com,contact,False
+18,person,Ron Gibson,ron.gibson76@example.com,contact,8
+33,person,Tom Ruiz,tom.ruiz89@example.com,contact,8
+17,person,Willie Burke,willie.burke80@example.com,contact,8
+1,company,YourCompany,login@mint-system.ch,contact,False
+40,person,Chester Reed,chester.reed79@example.com,contact,1
+41,person,Dwayne Newman,dwayne.newman28@example.com,contact,1
+7,person,Joel Willis,joel.willis63@example.com,contact,False
+6,person,Marc Demo,mark.brown23@example.com,contact,False
+3,person,Mitchell Admin,login@mint-system.ch,contact,False

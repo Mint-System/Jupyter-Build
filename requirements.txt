@@ -1,0 +1,5 @@
+jupyterlab
+papermill
+pandas
+openpyxl
+jupyter-ai
