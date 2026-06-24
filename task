@@ -1,0 +1,196 @@
+#!/usr/bin/env bash
+set -e
+
+help-table() {
+    local -a rows
+    local max_cmd=7 max_opt=6 max_desc=11
+
+    rows+=("Command|Option|Description")
+    rows+=("install||Install Python packages.")
+    rows+=("start|[env]|Start Jupyter Lab.")
+    rows+=("list-env||List .env files.")
+    rows+=("load-env|[env]|Load and export .env file.")
+    rows+=("run|<path>[env]|Run Jupyter notebok.")
+    rows+=("exec-entrypoint-jupyter||Start Jupyter Lab inside container.")
+    rows+=("run-container|<path>|Run Jupyter Lab in Docker container.")
+
+    for row in "${rows[@]}"; do
+        IFS='|' read -r cmd opt desc <<< "$row"
+        (( ${#cmd} > max_cmd )) && max_cmd=${#cmd}
+        (( ${#opt} > max_opt )) && max_opt=${#opt}
+        (( ${#desc} > max_desc )) && max_desc=${#desc}
+    done
+
+    printf '| %-*s | %-*s | %-*s |\n' \
+        "$max_cmd" "Command" \
+        "$max_opt" "Option" \
+        "$max_desc" "Description"
+
+    printf '|-%*s-|-%*s-|-%*s-|\n' \
+        "$max_cmd" "$(printf '%*s' "$max_cmd" '' | tr ' ' '-')" \
+        "$max_opt" "$(printf '%*s' "$max_opt" '' | tr ' ' '-')" \
+        "$max_desc" "$(printf '%*s' "$max_desc" '' | tr ' ' '-')"
+
+    local first_row=true
+    for row in "${rows[@]:1}"; do
+        IFS='|' read -r cmd opt desc <<< "$row"
+        if [[ "$cmd" =~ ^===.*===$ ]]; then
+            group_name="${cmd/===/}"
+            group_name="${group_name/===/}"
+            
+            if [ "$first_row" = true ]; then
+                first_row=false
+            else
+                printf '|-%*s-|-%*s-|-%*s-|\n' \
+                    "$max_cmd" "$(printf '%*s' "$max_cmd" '' | tr ' ' '-')" \
+                    "$max_opt" "$(printf '%*s' "$max_opt" '' | tr ' ' '-')" \
+                    "$max_desc" "$(printf '%*s' "$max_desc" '' | tr ' ' '-')"
+            fi
+            
+            local left_pad=$(( (max_cmd - ${#group_name}) / 2 ))
+            local right_pad=$(( max_cmd - left_pad - ${#group_name} ))
+            printf '| %*s%s%*s | %*s | %*s |\n' \
+                "$left_pad" "" \
+                "$group_name" \
+                "$right_pad" "" \
+                "$max_opt" "" \
+                "$max_desc" ""
+            
+            printf '|-%*s-|-%*s-|-%*s-|\n' \
+                "$max_cmd" "$(printf '%*s' "$max_cmd" '' | tr ' ' '-')" \
+                "$max_opt" "$(printf '%*s' "$max_opt" '' | tr ' ' '-')" \
+                "$max_desc" "$(printf '%*s' "$max_desc" '' | tr ' ' '-')"
+        else
+            first_row=false
+            printf '| %-*s | %-*s | %-*s |\n' \
+                "$max_cmd" "$cmd" \
+                "$max_opt" "$opt" \
+                "$max_desc" "$desc"
+        fi
+    done
+}
+
+help() {
+    local grep_pattern
+    echo
+    if [[ -n "$1" ]]; then
+        grep_pattern="$1"
+        help-table | grep -i "$grep_pattern" | column -t -s'|'
+    else
+        echo "task <command> [options]"
+        echo
+        echo "commands:"
+        echo
+        help-table
+    fi
+    echo
+}
+
+TASK_DOTENV_DIR="$HOME/Odoo-Build/vault"
+
+if [[ -d "$HOME/taskfile.build/bin" ]]; then
+    for file in "$HOME/taskfile.build/bin/"*; do
+        if [[ -f "$file" ]]; then
+            # shellcheck disable=SC1090
+            source "$file"
+        fi
+    done
+fi
+
+install() {
+    uv_venv="${VENV_PATH:-.venv}"
+    uv venv "$uv_venv" --clear
+    source "$uv_venv/bin/activate"
+    uv pip install -r requirements.txt
+}
+
+run() {
+    uv_venv="${VENV_PATH:-.venv}"
+    source "$uv_venv/bin/activate"
+
+    if [[ -z "$1" ]]; then
+        echo '$1/path is empty.'
+        exit
+    fi
+    if [[ -n "$2" ]]; then
+        echo "Load env file $2."
+        load-dotenv "$2"
+        export ODOO_URL
+        export ODOO_DATABASE
+        export ODOO_USERNAME
+        export ODOO_PASSWORD
+    fi
+    papermill --log-output "$1" "$1"
+}
+
+start() {
+    uv_venv="${VENV_PATH:-.venv}"
+    source "$uv_venv/bin/activate"
+
+    if [[ -n "$1" ]]; then
+        echo "Load env file $1."
+        load-dotenv "$1"
+        export ODOO_URL
+        export ODOO_DATABASE
+        export ODOO_USERNAME
+        export ODOO_PASSWORD
+    fi
+    jupyter lab
+}
+
+exec-entrypoint-jupyter() {
+    uv_venv="${VENV_PATH:-.venv}"
+    source "$uv_venv/bin/activate"
+
+    jupyter lab \
+        --ip=${JUPYTER_HOST:-localhost} \
+        --port=${JUPYTER_PORT:-8888} \
+        --IdentityProvider.token=${JUPYTER_TOKEN:-""} \
+        --allow-root
+}
+
+run-container() {
+    container_name="jupyter-build"
+    image_tag="mintsystem/taskfile.build:latest"
+
+    docker pull "$image_tag"
+    docker rm -f "$container_name"
+
+    JUPYTER_TOKEN="etooSheese5eedae1mid"
+    echo "Open http://localhost:8888/lab?token=$JUPYTER_TOKEN in your browser"
+    docker run -p 8888:80 -d \
+        --name "$container_name" \
+        -e VENV_PATH="/app/.venv" \
+        -e TASK_COMMANDS="install" \
+        -e JUPYTER_HOST="0.0.0.0" \
+        -e JUPYTER_TOKEN="$JUPYTER_TOKEN" \
+        -e JUPYTER_PORT="80" \
+        -v "$(pwd):/app/repo" \
+        "$image_tag" \
+        ./task exec-entrypoint-jupyter
+}
+
+if [[ "$1" == *","* ]]; then
+    # Split comma-separated commands
+    IFS=',' read -ra COMMANDS <<< "$1"
+    for cmd in "${COMMANDS[@]}"; do
+        # Trim whitespace
+        cmd=$(echo "$cmd" | xargs)
+        if declare -f "$cmd" > /dev/null; then
+            "$cmd"
+        else
+            echo "Unknown command: $cmd"
+            help "$@"
+            exit 1
+        fi
+    done
+elif declare -f "$1" > /dev/null; then
+    "$1" "${@:2}"
+else
+    case "$1" in
+        *)
+            echo "Unknown command: $1"
+            exit 1
+            ;;
+    esac
+fi

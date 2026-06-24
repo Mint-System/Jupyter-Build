@@ -1,0 +1,24 @@
+# taskfile
+tmp
+
+# dotenv
+.env
+
+# Hugo
+_site
+
+# pnpm
+node_modules
+
+# Obsidian
+.obsidian/workspace.json
+
+# VitePress
+.vitepress/dist
+.vitepress/cache
+
+# Python
+.venv
+
+# Jupyter
+.ipynb_checkpoints
