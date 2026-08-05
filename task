@@ -86,8 +86,6 @@ help() {
     echo
 }
 
-TASK_DOTENV_DIR="$HOME/Odoo-Build/vault"
-
 if [[ -d "$HOME/taskfile.build/bin" ]]; then
     for file in "$HOME/taskfile.build/bin/"*; do
         if [[ -f "$file" ]]; then
