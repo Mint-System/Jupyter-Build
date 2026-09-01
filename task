@@ -6,11 +6,11 @@ help-table() {
     local max_cmd=7 max_opt=6 max_desc=11
 
     rows+=("Command|Option|Description")
-    rows+=("install||Install Python packages.")
-    rows+=("start|[env]|Start Jupyter Lab.")
-    rows+=("list-env||List .env files.")
-    rows+=("load-env|[env]|Load and export .env file.")
-    rows+=("run|<path>[env]|Run Jupyter notebok.")
+    rows+=("===Jupyter===| | ")
+    rows+=("start-jupyter-lab|[env]|Start Jupyter Lab server.")
+    rows+=("install-jupyter-lab||Install Jupyter Lab and dependencies.")
+    rows+=("run-jupyter-notebook|[path][env]|Execute notebook with papermill.")
+    rows+=("===Project===| | ")
     rows+=("exec-entrypoint-jupyter||Start Jupyter Lab inside container.")
     rows+=("run-container|<path>|Run Jupyter Lab in Docker container.")
 
@@ -94,47 +94,6 @@ if [[ -d "$HOME/taskfile.build/bin" ]]; then
         fi
     done
 fi
-
-install() {
-    uv_venv="${VENV_PATH:-.venv}"
-    uv venv "$uv_venv" --clear
-    source "$uv_venv/bin/activate"
-    uv pip install -r requirements.txt
-}
-
-run() {
-    uv_venv="${VENV_PATH:-.venv}"
-    source "$uv_venv/bin/activate"
-
-    if [[ -z "$1" ]]; then
-        echo '$1/path is empty.'
-        exit
-    fi
-    if [[ -n "$2" ]]; then
-        echo "Load env file $2."
-        load-dotenv "$2"
-        export ODOO_URL
-        export ODOO_DATABASE
-        export ODOO_USERNAME
-        export ODOO_PASSWORD
-    fi
-    papermill --log-output "$1" "$1"
-}
-
-start() {
-    uv_venv="${VENV_PATH:-.venv}"
-    source "$uv_venv/bin/activate"
-
-    if [[ -n "$1" ]]; then
-        echo "Load env file $1."
-        load-dotenv "$1"
-        export ODOO_URL
-        export ODOO_DATABASE
-        export ODOO_USERNAME
-        export ODOO_PASSWORD
-    fi
-    jupyter lab
-}
 
 exec-entrypoint-jupyter() {
     uv_venv="${VENV_PATH:-.venv}"

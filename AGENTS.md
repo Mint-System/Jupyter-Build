@@ -34,9 +34,13 @@ Do not automatically install new software packages. Always ask for permission.
 
 When creating temporary fiels and scripts, use the `./tmp` directory.
 
-### Jupyter Notebook and Regex
+### Jupyter Notebooks
 
-Using regex patterns in Jupyter notebook cells is hard to edit for @Clanker tools. Create a Python file in a `./lib` folder that imports the necessary function to perform regex searches and replacements.
+**Run with timeout**: Run the notebook with `timeout 10 task run-jupyter-notebook <path> [env]`.
+
+**Edit with MCP**: Launch Jupyter Lab and use the builtin MCP server to edit the notebooks.
+
+**About Regex**: Using regex patterns in Jupyter notebook cells is hard to edit for @Clanker tools. Create a Python file in a `./lib` folder that imports the necessary function to perform regex searches and replacements.
 
 ## Project structure
 
