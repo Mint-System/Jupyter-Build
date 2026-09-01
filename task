@@ -118,10 +118,12 @@ run-container() {
     docker run -p 8888:80 -d \
         --name "$container_name" \
         -e VENV_PATH="/app/.venv" \
-        -e TASK_COMMANDS="install" \
+        -e TASK_COMMANDS="install-jupyter-lab" \
         -e JUPYTER_HOST="0.0.0.0" \
         -e JUPYTER_TOKEN="$JUPYTER_TOKEN" \
         -e JUPYTER_PORT="80" \
+        -e OPENCODE_BASE_URL="https://api.infomaniak.com/2/ai/105852/openai/v1" \
+        -e OPENCODE_API_TOKEN="$OPENCODE_API_TOKEN" \
         -v "$(pwd):/app/repo" \
         "$image_tag" \
         ./task exec-entrypoint-jupyter
