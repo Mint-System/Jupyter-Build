@@ -31,9 +31,15 @@ The API token is stored in the `.env` file.
 
 Setup the connection first.
 
-The notebok must sync the contacts in both directions. For starter just create the mapping of the fields.
+The notebok must sync the contacts in both directions. For starters just create the mapping of the fields.
+
+Then implement the sync of available fields.
 
 Store the record ID of Bexion as XML-ID in Odoo to make the link.
+
+At then end of the notebook provide a sync summary.
+
+When I rerun the notebook it must execute a delta sync and not a full sync.
 
 ## Worklog
 
