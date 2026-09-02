@@ -27,8 +27,9 @@ Use these credentials to connect to the database:
 ODOO_URL=https://jupyter-lab.19.odoo.build/
 ODOO_DB=jupyter-lab
 ODOO_USERNAME=login@mint-system.ch
-ODOO_PASSWORD=5a78545dbde09f0e19a818acdf45efa98673f36a
 ```
+
+The Odoo password is stored in the `.env` file.
 
 Make sure the connection works before doing the contacts export part.
 
