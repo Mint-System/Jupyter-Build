@@ -2,7 +2,7 @@
 title: "Sync Bexio and Odoo"
 state: completed
 model: infomaniak/moonshotai/Kimi-K2.6
-input_tokens: ~180000
+input_tokens: 
 ---
 
 # Run 02

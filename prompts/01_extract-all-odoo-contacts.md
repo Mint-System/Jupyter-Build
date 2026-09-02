@@ -1,6 +1,8 @@
 ---
 title: "Extract all Odoo contacts"
-state: completed
+state: draft
+model: 
+input_tokens: 
 ---
 
 # Run 01
@@ -19,17 +21,16 @@ Read the `AGENTS.md` and `README.md` to get an understanding of the project.
 
 ## Task
 
-Create a Jupyter notebook `extract.ipynb`. This notebook connects with the new JSON-2 API via `/json/2` endpint to Odoo and exports all contacts.
+Create a Jupyter notebook `extract_odoo.ipynb`. This notebook connects to Odoo with JSON-2 at the `/json/2` endpoint and exports all contacts.
 
 Use these credentials to connect to the database:
 
 ```
 ODOO_URL=https://jupyter-lab.19.odoo.build/
 ODOO_DB=jupyter-lab
-ODOO_USERNAME=login@mint-system.ch
 ```
 
-The Odoo password is stored in the `.env` file.
+The Odoo API token is stored in the `.env` file.
 
 Make sure the connection works before doing the contacts export part.
 
@@ -42,16 +43,8 @@ For the export read the `res.partner` table. I want you to read/store these attr
 - `type`
 - `parent_id`
 
-You can run the notebook with `task run extract.ipynb`.
-
 ## Worklog
 
-Created `extract.ipynb` that connects to Odoo 18 via `/json/2` JSON-RPC API using Bearer token auth (password used as API key). The notebook:
-- Uses `urllib` with SSL verification bypass (expired cert on server)
-- Calls `res.partner/search` to get all 38 contact IDs
-- Calls `res.partner/get_external_id` to retrieve XML IDs (none found, fallback to DB ID)
-- Calls `res.partner/read` in batches of 200 to get fields
-- Exports to `input/res.partner.csv`
-- Cleans `parent_id` from display-name tuples to raw IDs
+@Clanker Add a summary here once the task has been completed.
 
-Ran successfully with `./task run extract.ipynb`.
+@Clanker Set frontmatter state to completed and update info about model and token usage.
